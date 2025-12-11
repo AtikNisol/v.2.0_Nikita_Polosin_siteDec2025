@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Никита Полосин</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="photo/me.ico" type="image/x-icon">
+    <style>
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-image {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            display: none;
+        }
+
+        .loading-image.active {
+            display: block;
+        }
+
+        #question-mark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+            display: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #egg-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            display: none;
+            z-index: 1001;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <img src="photo/0.png" alt="0%" class="loading-image active" id="image-0">
+        <img src="photo/10.png" alt="10%" class="loading-image" id="image-10">
+        <img src="photo/20.png" alt="20%" class="loading-image" id="image-20">
+        <img src="photo/30.png" alt="30%" class="loading-image" id="image-30">
+        <img src="photo/40.png" alt="40%" class="loading-image" id="image-40">
+        <img src="photo/50.png" alt="50%" class="loading-image" id="image-50">
+        <img src="photo/60.png" alt="60%" class="loading-image" id="image-60">
+        <img src="photo/70.png" alt="70%" class="loading-image" id="image-70">
+        <img src="photo/80.png" alt="80%" class="loading-image" id="image-80">
+        <img src="photo/90.png" alt="90%" class="loading-image" id="image-90">
+    </div>
+    <div class="grid">
+        <a href="https://fpcl.xyz" class="cube" id="A1" target="_blank"><img src="photo/fpcl.png" alt="fpcl"></a>
+        <div class="cube" id="head" style="grid-column: span 2;"><img src="photo/head.png" alt="head"></div>
+        <a href="https://suslik.shop" class="cube" id="A4" target="_blank"><img src="photo/suslik.png" alt="suslik"></a>
+        <a href="page1.html" class="cube" id="C1"><img src="photo/listen.png" alt="listen"></a>
+        <a href="https://drive.google.com/drive/folders/1jqPJvFSzt_Jz4yO0vcp2dvZ7R8zv5A4K?usp=sharing" class="cube" id="C2" target="_blank"><img src="photo/stems.png" alt="stems"></a>
+        <a href="page2.html" class="cube" id="C3"><img src="photo/picture.png" alt="picture"></a>
+        <a href="page3.html" class="cube" id="C4"><img src="photo/net.png" alt="net"></a>
+    </div>
+    <div id="question-mark">?</div>
+    <img id="egg-image" src="photo/eggs.jpg" alt="Easter Egg">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const hasLoadedBefore = sessionStorage.getItem("hasLoadedBefore");
+
+            if (hasLoadedBefore) {
+                document.getElementById("loading-screen").style.display = "none";
+            } else {
+                sessionStorage.setItem("hasLoadedBefore", "true");
+
+                const resources = [
+                    "photo/fpcl.png",
+                    "photo/head.png",
+                    "photo/suslik.png",
+                    "photo/listen.png",
+                    "photo/stems.png",
+                    "photo/picture.png",
+                    "photo/net.png"
+                ];
+
+                const images = document.querySelectorAll(".loading-image");
+                let loadedResources = 0;
+                const totalResources = resources.length;
+
+                const updateLoadingProgress = () => {
+                    const progress = Math.round((loadedResources / totalResources) * 100);
+                    images.forEach((img, index) => {
+                        img.classList.toggle("active", index === Math.floor(progress / 10));
+                    });
+
+                    if (progress === 100) {
+                        document.getElementById("loading-screen").style.display = "none";
+                    }
+                };
+
+                resources.forEach(resource => {
+                    const img = new Image();
+                    img.src = resource;
+                    img.onload = () => {
+                        loadedResources++;
+                        updateLoadingProgress();
+                    };
+                });
+            }
+
+            const headImage = document.getElementById("head");
+            let isInverted = false;
+
+            headImage.addEventListener("click", () => {
+                isInverted = !isInverted;
+                document.documentElement.style.transition = "filter 0.5s ease";
+                document.documentElement.style.filter = isInverted ? "invert(1)" : "invert(0)";
+
+                // Store the inversion state in localStorage
+                localStorage.setItem("isInverted", isInverted);
+
+                // Show or hide the question mark based on inversion state
+                const questionMark = document.getElementById("question-mark");
+                questionMark.style.display = isInverted ? "block" : "none";
+
+                console.log("Question mark display:", questionMark.style.display); // Debugging line to check visibility
+            });
+
+            // Apply the inversion state on page load with transition
+            const savedInversionState = localStorage.getItem("isInverted");
+            if (savedInversionState === "true") {
+                document.documentElement.style.filter = "invert(1)";
+                document.documentElement.style.transition = "filter 0.5s ease";
+                document.getElementById("question-mark").style.display = "block";
+            } else {
+                document.documentElement.style.filter = "invert(0)";
+            }
+
+            // Add functionality for the question mark
+            document.getElementById("question-mark").addEventListener("click", () => {
+                const eggImage = document.getElementById("egg-image");
+                eggImage.style.display = "block";
+            });
+
+            // Add functionality to close the egg image
+            document.getElementById("egg-image").addEventListener("click", () => {
+                document.getElementById("egg-image").style.display = "none";
+            });
+
+            const questionMark = document.getElementById('question-mark');
+            const eggImage = document.getElementById('egg-image');
+
+            questionMark.addEventListener('click', function(event) {
+                eggImage.style.display = 'block';
+                event.stopPropagation(); // Prevent the click from propagating to the document
+            });
+
+            document.addEventListener('click', function() {
+                if (eggImage.style.display === 'block') {
+                    eggImage.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
