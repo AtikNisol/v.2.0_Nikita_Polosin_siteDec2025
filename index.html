@@ -1,10 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="refresh" content="0; url=/home/" />
-    <title>Redirecting...</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Никита Полосин</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/photo/me.ico" type="image/x-icon">
+    <style>
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-image {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            display: none;
+        }
+
+        .loading-image.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to <a href="/home/">home</a></p>
+    <div id="loading-screen">
+        <img src="/photo/0.png" alt="0%" class="loading-image active" id="image-0">
+        <img src="/photo/10.png" alt="10%" class="loading-image" id="image-10">
+        <img src="/photo/20.png" alt="20%" class="loading-image" id="image-20">
+        <img src="/photo/30.png" alt="30%" class="loading-image" id="image-30">
+        <img src="/photo/40.png" alt="40%" class="loading-image" id="image-40">
+        <img src="/photo/50.png" alt="50%" class="loading-image" id="image-50">
+        <img src="/photo/60.png" alt="60%" class="loading-image" id="image-60">
+        <img src="/photo/70.png" alt="70%" class="loading-image" id="image-70">
+        <img src="/photo/80.png" alt="80%" class="loading-image" id="image-80">
+        <img src="/photo/90.png" alt="90%" class="loading-image" id="image-90">
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const resources = [
+                "/photo/fpcl.png",
+                "/photo/head.png",
+                "/photo/suslik.png",
+                "/photo/listen.png",
+                "/photo/stems.png",
+                "/photo/picture.png",
+                "/photo/net.png"
+            ];
+
+            const images = document.querySelectorAll(".loading-image");
+            let loadedResources = 0;
+            const totalResources = resources.length;
+
+            const updateLoadingProgress = () => {
+                const progress = Math.round((loadedResources / totalResources) * 100);
+                images.forEach((img, index) => {
+                    img.classList.toggle("active", index === Math.floor(progress / 10));
+                });
+
+                if (progress === 100) {
+                    sessionStorage.setItem("hasLoadedBefore", "true");
+                    window.location.href = '/home/';
+                }
+            };
+
+            resources.forEach(resource => {
+                const img = new Image();
+                img.src = resource;
+                img.onload = () => {
+                    loadedResources++;
+                    updateLoadingProgress();
+                };
+            });
+        });
+    </script>
 </body>
 </html>
