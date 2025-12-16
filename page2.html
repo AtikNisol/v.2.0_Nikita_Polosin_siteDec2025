@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Никита Полосин | Музыка</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="photo/me.ico" type="image/x-icon">
+    <style>
+        .image-row {
+            position: fixed; /* Makes the images fixed on the screen */
+            top: 50%; /* Centers the row vertically */
+            left: 50%; /* Centers the row horizontally */
+            transform: translate(-50%, -50%); /* Adjusts for the row's dimensions */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2vw; /* Adjust spacing relative to viewport width */
+            width: auto; /* Allow the row to adjust dynamically */
+            max-width: 100vw; /* Ensure the row fits within the viewport */
+            overflow: visible; /* Ensure no cropping occurs */
+        }
+
+        .centered-image {
+            max-height: 24.2vh; /* Increased the maximum height by another 10% */
+            max-width: 24.2vw; /* Scale images relative to viewport width */
+            height: auto; /* Maintain aspect ratio */
+            position: relative;
+            cursor: pointer; /* Indicate clickable images */
+            transition: transform 0.3s ease; /* Smooth scaling effect */
+        }
+
+        .centered-image:hover {
+            transform: scale(1.2); /* Slightly reduce the enlargement on hover */
+        }
+
+        #frame-img {
+            cursor: pointer;
+        }
+
+        .first-frame-container, .second-frame-container, .third-frame-container {
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Dark background */
+            backdrop-filter: blur(10px); /* Blur effect */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer; /* Allow closing by clicking the image */
+        }
+    </style>
+</head>
+<body>
+    <div class="grid">
+        <a href="https://fpcl.xyz" class="cube" id="A1" target="_blank"><img src="photo/fpcl.png" alt="fpcl"></a>
+        <a href="index.html" class="cube" id="head" style="grid-column: span 2;"><img src="photo/head.png" alt="head"></a>
+        <a href="https://suslik.shop" class="cube" id="A4" target="_blank"><img src="photo/suslik.png" alt="suslik"></a>
+    </div>
+
+    <div class="image-row">
+        <div class="first-frame-container">
+            <img src="photo/gallery1.png" alt="Gallery 1" class="centered-image">
+        </div>
+        <div class="second-frame-container">
+            <img src="photo/gallery2.png" alt="Gallery 2" class="centered-image">
+        </div>
+        <div class="third-frame-container">
+            <img src="photo/gallery3.png" alt="Gallery 3" class="centered-image">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('#frame-img').forEach(function(frame) {
+                frame.addEventListener('click', function() {
+                    alert('Frame clicked!');
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('.centered-image');
+            const modal = document.createElement('div');
+            modal.classList.add('modal');
+            document.body.appendChild(modal);
+
+            const modalImage = document.createElement('img');
+            modal.appendChild(modalImage);
+
+            images.forEach(image => {
+                image.addEventListener('click', () => {
+                    modalImage.src = image.src; // Set the modal image source to the clicked image
+                    modal.style.display = 'flex'; // Show the modal
+                });
+            });
+
+            modal.addEventListener('click', () => {
+                modal.style.display = 'none'; // Hide the modal when clicking anywhere on it
+            });
+        });
+    </script>
+</body>
+</html>
